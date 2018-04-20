@@ -26,6 +26,8 @@ using QuantConnect.Securities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using QuantConnect.Tests.ToolBox;
+using QuantConnect.ToolBox;
 
 namespace QuantConnect.Tests.Engine.DataFeeds
 {
@@ -358,6 +360,33 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                     expected = expected ?? type.GetProperty("Transactions")?.GetValue(rawBars[i]);
                     Assert.AreEqual(expected, transactions);
                 }
+            }
+        }
+
+        private object[] SpotMarketCases => LeanDataReaderTests.SpotMarketCases;
+
+        [Test, TestCaseSource(nameof(SpotMarketCases))]
+        public void HandlesLeanDataReaderOutput(string securityType, string market, string resolution, string ticker, string fileName, int rowsInfile, double sumValue)
+        {
+            // Arrange
+            var dataFolder = "../../../Data";
+            var filepath = LeanDataReaderTests.GenerateFilepathForTesting(dataFolder, securityType, market, resolution, ticker, fileName);
+            var leanDataReader = new LeanDataReader(filepath);
+            var data = leanDataReader.Parse();
+            var converter = new PandasConverter();
+            // Act
+            dynamic df = converter.GetDataFrame(data);
+            // Assert
+            Assert.AreEqual(df.shape[0].AsManagedObject(typeof(int)), rowsInfile);
+
+            int columnsNumber = df.shape[1].AsManagedObject(typeof(int));
+            if (columnsNumber == 3 || columnsNumber == 6)
+            {
+                Assert.AreEqual(df.get("lastprice").sum().AsManagedObject(typeof(double)), sumValue, 1e-4);
+            }
+            else
+            {
+                Assert.AreEqual(df.get("close").sum().AsManagedObject(typeof(double)), sumValue, 1e-4);
             }
         }
 
