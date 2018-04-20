@@ -44,12 +44,7 @@ def get_assemblies_folder():
     assembly_folder_path = str(assemblies_folder_info.resolve().absolute())
 
     config_file = assemblies_folder_info.joinpath('config.json')
-    if config_file.exists():
-        with open(str(config_file.resolve().absolute()), 'r+') as cfg:
-            cfg_content = json.load(cfg)
-            cfg_content['plugin-directory'] = assembly_folder_path
-            json.dump(cfg_content, cfg)
-    else:
+    if not config_file.exists():
         cfg_content = {'plugin-directory': assembly_folder_path}
         with open(str(config_file.resolve().absolute()), 'w') as cfg:
             json.dump(cfg_content, cfg)
