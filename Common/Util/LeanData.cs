@@ -14,6 +14,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -818,7 +819,11 @@ namespace QuantConnect.Util
 
                 if (securityType == SecurityType.Option || securityType == SecurityType.Future)
                 {
-                    throw new ArgumentException("LeanData.TryParsePath(): Options and futures are not supported by this method.");
+                    // TODO: watch out! check carefully why Andrew made this.
+                    if (fileName.Contains("openinterest") || securityType == SecurityType.Option)
+                    {
+                        throw new NotImplementedException("Options and open interest not supported, yet");
+                    }
                 }
 
                 // If resolution is Daily or Hour, we do not need to set the date and tick type

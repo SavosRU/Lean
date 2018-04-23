@@ -55,11 +55,26 @@ namespace QuantConnect.ToolBox
             Symbol symbol;
             DateTime date;
             Resolution resolution;
+            string zipEntry = null;
+
+            var isFutureOrOption = filepath.Contains("#");
+
+            if (isFutureOrOption)
+            {
+                zipEntry = filepath.Split('#')[1];
+                filepath = filepath.Split('#')[0];
+            }
+
 
             var fileInfo = new FileInfo(filepath);
             if (!LeanData.TryParsePath(fileInfo.FullName, out symbol, out date, out resolution))
             {
                 throw new ArgumentException($"File {filepath} cannot be parsed.");
+            }
+
+            if (isFutureOrOption)
+            {
+                symbol = LeanData.ReadSymbolFromZipEntry(symbol, Resolution.Minute, zipEntry);
             }
 
             var marketHoursDataBase = MarketHoursDatabase.FromDataFolder();
@@ -72,6 +87,11 @@ namespace QuantConnect.ToolBox
                 tickType = TickType.Trade;
             }
 
+            if (symbol.SecurityType == SecurityType.Future && fileInfo.Name.Contains("quote"))
+            {
+                tickType = TickType.Quote;
+            }
+
             var dataType = LeanData.GetDataType(resolution, tickType);
 
             var config = new SubscriptionDataConfig(dataType, symbol, resolution,
@@ -80,7 +100,7 @@ namespace QuantConnect.ToolBox
 
             _date = date;
             _zipPath = fileInfo.FullName;
-            _zipentry = null;
+            _zipentry = zipEntry;
             _config = config;
         }
 

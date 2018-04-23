@@ -224,21 +224,38 @@ namespace QuantConnect.Tests.ToolBox
         #endregion
 
 
-        [TestCase("D:/REPOS/LeanVersions/Lean/Data/future/usa/minute/es/20131008_quote.zip#20131008_es_minute_quote_201312.csv")]
-        //[TestCase("D:/REPOS/LeanVersions/Lean/Data/option/usa/minute/foxa/20130702_quote_american.zip#20130702_foxa_minute_quote_american_call_280000_20130720.csv")]
-        public void ReadLeanFutureAndOptionDataFromFilePath(string composedFilePath)
+        [Test, TestCaseSource(nameof(OptionAndFuturesCases)), Category("TravisExclude")]
+        public void ReadLeanFutureAndOptionDataFromFilePath(string composedFilePath, Symbol symbol,  int rowsInfile, double sumValue)
         {
-            // Arrange
-            var symbol = Symbol.Create(Futures.Indices.SP500EMini, SecurityType.Future, Market.USA);
             // Act
             var ldr = new LeanDataReader(composedFilePath);
             var data = ldr.Parse().ToArray();
             // Assert
             Assert.True(symbol.Equals(data.First().Symbol));
-            //Assert.AreEqual(data.Length, rowsInfile);
-            //Assert.AreEqual(data.Sum(c => c.Value), sumValue);
-
+            Assert.AreEqual(rowsInfile, data.Length);
+            Assert.AreEqual(sumValue, data.Sum(c => c.Value));
         }
+
+        
+        public object[] OptionAndFuturesCases =
+        {
+            new object[]
+            {
+                "../../../Data/future/usa/minute/es/20131008_quote.zip#20131008_es_minute_quote_201312.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Indices.SP500EMini, SecurityType.Future, Market.USA), Resolution.Minute, "20131008_es_minute_quote_201312.csv"),
+                1411,
+                2346061.875
+            },
+
+            new object[]
+            {
+                "../../../Data\\future\\usa\\minute\\gc\\20131010_trade.zip#20131010_gc_minute_trade_201312.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold , SecurityType.Future, Market.USA), Resolution.Minute, "20131010_gc_minute_trade_201312.csv"),
+                1379,
+                1791800.9
+            }
+        };
+        
 
 
         [Test, TestCaseSource(nameof(SpotMarketCases)), Category("TravisExclude")]
