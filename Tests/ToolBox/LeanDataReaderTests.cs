@@ -223,8 +223,26 @@ namespace QuantConnect.Tests.ToolBox
 
         #endregion
 
+
+        [TestCase("D:/REPOS/LeanVersions/Lean/Data/future/usa/minute/es/20131008_quote.zip#20131008_es_minute_quote_201312.csv")]
+        //[TestCase("D:/REPOS/LeanVersions/Lean/Data/option/usa/minute/foxa/20130702_quote_american.zip#20130702_foxa_minute_quote_american_call_280000_20130720.csv")]
+        public void ReadLeanFutureAndOptionDataFromFilePath(string composedFilePath)
+        {
+            // Arrange
+            var symbol = Symbol.Create(Futures.Indices.SP500EMini, SecurityType.Future, Market.USA);
+            // Act
+            var ldr = new LeanDataReader(composedFilePath);
+            var data = ldr.Parse().ToArray();
+            // Assert
+            Assert.True(symbol.Equals(data.First().Symbol));
+            //Assert.AreEqual(data.Length, rowsInfile);
+            //Assert.AreEqual(data.Sum(c => c.Value), sumValue);
+
+        }
+
+
         [Test, TestCaseSource(nameof(SpotMarketCases)), Category("TravisExclude")]
-        public void ReadLeanDataFromFilePath(string securityType, string market, string resolution, string ticker, string fileName, int rowsInfile, double sumValue)
+        public void ReadLeanSpotMarketsSecuritiesDataFromFilePath(string securityType, string market, string resolution, string ticker, string fileName, int rowsInfile, double sumValue)
         {
             // Arrange
             var filepath = GenerateFilepathForTesting(_dataDirectory, securityType, market, resolution, ticker, fileName);

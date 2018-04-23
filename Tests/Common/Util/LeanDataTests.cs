@@ -279,6 +279,23 @@ namespace QuantConnect.Tests.Common.Util
             Assert.AreEqual(date.Date, DateTime.Parse("2016-01-01").Date);
         }
 
+        [Test]
+        public void CryptoPaths_CanBeParsedCorrectly()
+        {
+            DateTime date;
+            Symbol symbol;
+            Resolution resolution;
+
+            var cryptoPath = "Data\\crypto\\gdax\\daily\\btcusd_quote.zip";
+            Assert.IsTrue(LeanData.TryParsePath(cryptoPath, out symbol, out date, out resolution));
+            Assert.AreEqual(symbol.SecurityType, SecurityType.Crypto);
+            Assert.AreEqual(symbol.ID.Market, Market.GDAX);
+            Assert.AreEqual(resolution, Resolution.Daily);
+            Assert.AreEqual(symbol.ID.Symbol.ToLower(), "btcusd");
+            Assert.AreEqual(date.Date, DateTime.Parse("2016-10-07").Date);
+
+        }
+
         private static void AssertBarsAreEqual(IBar expected, IBar actual)
         {
             if (expected == null && actual == null)
