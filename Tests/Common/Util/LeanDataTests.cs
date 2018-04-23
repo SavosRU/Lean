@@ -292,8 +292,21 @@ namespace QuantConnect.Tests.Common.Util
             Assert.AreEqual(symbol.ID.Market, Market.GDAX);
             Assert.AreEqual(resolution, Resolution.Daily);
             Assert.AreEqual(symbol.ID.Symbol.ToLower(), "btcusd");
-            Assert.AreEqual(date.Date, DateTime.Parse("2016-10-07").Date);
 
+            cryptoPath = "Data\\crypto\\gdax\\hour\\btcusd_quote.zip";
+            Assert.IsTrue(LeanData.TryParsePath(cryptoPath, out symbol, out date, out resolution));
+            Assert.AreEqual(symbol.SecurityType, SecurityType.Crypto);
+            Assert.AreEqual(symbol.ID.Market, Market.GDAX);
+            Assert.AreEqual(resolution, Resolution.Hour);
+            Assert.AreEqual(symbol.ID.Symbol.ToLower(), "btcusd");
+
+            cryptoPath = "Data\\crypto\\gdax\\minute\\btcusd\\20161007_quote.zip";
+            Assert.IsTrue(LeanData.TryParsePath(cryptoPath, out symbol, out date, out resolution));
+            Assert.AreEqual(symbol.SecurityType, SecurityType.Crypto);
+            Assert.AreEqual(symbol.ID.Market, Market.GDAX);
+            Assert.AreEqual(resolution, Resolution.Minute);
+            Assert.AreEqual(symbol.ID.Symbol.ToLower(), "btcusd");
+            Assert.AreEqual(date.Date, DateTime.Parse("2016-10-07").Date);
         }
 
         private static void AssertBarsAreEqual(IBar expected, IBar actual)

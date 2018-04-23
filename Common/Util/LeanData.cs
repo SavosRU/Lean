@@ -829,7 +829,7 @@ namespace QuantConnect.Util
 
                 if (securityType == SecurityType.Crypto)
                 {
-                    //ticker = ticker.Split('_').First();
+                    ticker = ticker.Split('_').First();
                 }
 
                 symbol = Symbol.Create(ticker, securityType, market);
