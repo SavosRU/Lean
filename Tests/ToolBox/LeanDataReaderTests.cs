@@ -233,6 +233,7 @@ namespace QuantConnect.Tests.ToolBox
             // Assert
             Assert.True(symbol.Equals(data.First().Symbol));
             Assert.AreEqual(rowsInfile, data.Length);
+            //Assert.AreEqual(sumValue, data.Cast<Tick>().Where(t=> t.IsValid()).Sum(c => c.Value));
             Assert.AreEqual(sumValue, data.Sum(c => c.Value));
         }
 
@@ -253,7 +254,17 @@ namespace QuantConnect.Tests.ToolBox
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold , SecurityType.Future, Market.USA), Resolution.Minute, "20131010_gc_minute_trade_201312.csv"),
                 1379,
                 1791800.9
-            }
+            },
+
+            new object[]
+            {
+                "../../../Data\\future\\usa\\tick\\gc\\20131009_quote.zip#20131009_gc_tick_quote_201406.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold , SecurityType.Future, Market.USA), Resolution.Tick, "20131009_gc_tick_quote_201406.csv"),
+                197839,
+                259245064.8
+            },
+
+
         };
         
 

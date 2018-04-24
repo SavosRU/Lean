@@ -94,8 +94,10 @@ namespace QuantConnect.ToolBox
 
             var dataType = LeanData.GetDataType(resolution, tickType);
 
+            
+
             var config = new SubscriptionDataConfig(dataType, symbol, resolution,
-                                                    dataTimeZone, exchangeTimeZone,
+                                                    dataTimeZone, exchangeTimeZone, tickType: tickType,
                                                     fillForward: false, extendedHours: true, isInternalFeed: true);
 
             _date = date;
