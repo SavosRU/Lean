@@ -64,8 +64,7 @@ namespace QuantConnect.ToolBox
                 zipEntry = filepath.Split('#')[1];
                 filepath = filepath.Split('#')[0];
             }
-
-
+            
             var fileInfo = new FileInfo(filepath);
             if (!LeanData.TryParsePath(fileInfo.FullName, out symbol, out date, out resolution))
             {
@@ -74,31 +73,19 @@ namespace QuantConnect.ToolBox
 
             if (isFutureOrOption)
             {
-                symbol = LeanData.ReadSymbolFromZipEntry(symbol, Resolution.Minute, zipEntry);
+                symbol = LeanData.ReadSymbolFromZipEntry(symbol, resolution, zipEntry);
             }
 
             var marketHoursDataBase = MarketHoursDatabase.FromDataFolder();
             var dataTimeZone = marketHoursDataBase.GetDataTimeZone(symbol.ID.Market, symbol, symbol.SecurityType);
             var exchangeTimeZone = marketHoursDataBase.GetExchangeHours(symbol.ID.Market, symbol, symbol.SecurityType).TimeZone;
+
             var tickType = LeanData.GetCommonTickType(symbol.SecurityType);
-
-
-            // TODO: include all this conditionals into the LeanData.GetCommonTickType mehtod
-            if (symbol.SecurityType == SecurityType.Crypto && !fileInfo.Name.Contains("quote"))
+            var fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+            if (fileName.Contains("_"))
             {
-                tickType = TickType.Trade;
+                tickType = (TickType)Enum.Parse(typeof(TickType), fileName.Split('_')[1], true);
             }
-
-            if ((symbol.SecurityType == SecurityType.Future|| symbol.SecurityType == SecurityType.Option) && fileInfo.Name.Contains("quote"))
-            {
-                tickType = TickType.Quote;
-            }
-
-            if (fileInfo.Name.Contains("openinterest"))
-            {
-                tickType = TickType.OpenInterest;
-            }
-
             var dataType = LeanData.GetDataType(resolution, tickType);
 
             var config = new SubscriptionDataConfig(dataType, symbol, resolution,

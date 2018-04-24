@@ -408,6 +408,10 @@ namespace QuantConnect.Tests.Engine.DataFeeds
             {
                 Assert.AreEqual(df.get("lastprice").sum().AsManagedObject(typeof(double)), sumValue, 1e-4);
             }
+            else if (columnsNumber == 1)
+            {
+                Assert.AreEqual(df.get("openinterest").sum().AsManagedObject(typeof(double)), sumValue, 1e-4);
+            }
             else
             {
                 Assert.AreEqual(df.get("close").sum().AsManagedObject(typeof(double)), sumValue, 1e-4);

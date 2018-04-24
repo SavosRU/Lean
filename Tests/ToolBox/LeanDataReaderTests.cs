@@ -252,7 +252,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\future\\usa\\minute\\gc\\20131010_trade.zip#20131010_gc_minute_trade_201312.csv",
+                "../../../Data/future/usa/minute/gc/20131010_trade.zip#20131010_gc_minute_trade_201312.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA),
                                                 Resolution.Minute, "20131010_gc_minute_trade_201312.csv"),
                 1379,
@@ -261,7 +261,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\future\\usa\\tick\\gc\\20131009_quote.zip#20131009_gc_tick_quote_201406.csv",
+                "../../../Data/future/usa/tick/gc/20131009_quote.zip#20131009_gc_tick_quote_201406.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA),
                                                 Resolution.Tick, "20131009_gc_tick_quote_201406.csv"),
                 197839,
@@ -270,7 +270,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\future\\usa\\tick\\gc\\20131009_trade.zip#20131009_gc_tick_trade_201312.csv",
+                "../../../Data/future/usa/tick/gc/20131009_trade.zip#20131009_gc_tick_trade_201312.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA),
                                                 Resolution.Tick, "20131009_gc_tick_trade_201312.csv"),
                 64712,
@@ -279,16 +279,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\future\\usa\\tick\\gc\\20131009_trade.zip#20131009_gc_tick_trade_201312.csv",
-                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA),
-                                                Resolution.Tick, "20131009_gc_tick_trade_201312.csv"),
-                64712,
-                84596673.8
-            },
-
-            new object[]
-            {
-                "../../../Data\\future\\usa\\minute\\es\\20131010_openinterest.zip#20131010_es_minute_openinterest_201312.csv",
+                "../../../Data/future/usa/minute/es/20131010_openinterest.zip#20131010_es_minute_openinterest_201312.csv",
                 LeanData
                     .ReadSymbolFromZipEntry(Symbol.Create(Futures.Indices.SP500EMini, SecurityType.Future, Market.USA),
                                             Resolution.Minute, "20131010_es_minute_openinterest_201312.csv"),
@@ -298,7 +289,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\future\\usa\\tick\\gc\\20131009_openinterest.zip#20131009_gc_tick_openinterest_201310.csv",
+                "../../../Data/future/usa/tick/gc/20131009_openinterest.zip#20131009_gc_tick_openinterest_201310.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA),
                                                 Resolution.Tick, "20131009_gc_tick_openinterest_201310.csv"),
                 4,
@@ -307,7 +298,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\option\\usa\\minute\\aapl\\20140606_quote_american.zip#20140606_aapl_minute_quote_american_put_7500000_20141018.csv",
+                "../../../Data/option/usa/minute/aapl/20140606_quote_american.zip#20140606_aapl_minute_quote_american_put_7500000_20141018.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create("AAPL", SecurityType.Option, Market.USA),
                                                 Resolution.Minute,
                                                 "20140606_aapl_minute_quote_american_put_7500000_20141018.csv"),
@@ -317,7 +308,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\option\\usa\\minute\\aapl\\20140606_trade_american.zip#20140606_aapl_minute_trade_american_call_6475000_20140606.csv",
+                "../../../Data/option/usa/minute/aapl/20140606_trade_american.zip#20140606_aapl_minute_trade_american_call_6475000_20140606.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create("AAPL", SecurityType.Option, Market.USA),
                                                 Resolution.Minute,
                                                 "20140606_aapl_minute_trade_american_call_6475000_20140606.csv"),
@@ -327,7 +318,7 @@ namespace QuantConnect.Tests.ToolBox
 
             new object[]
             {
-                "../../../Data\\option\\usa\\minute\\goog\\20151224_openinterest_american.zip#20151224_goog_minute_openinterest_american_call_3000000_20160115.csv",
+                "../../../Data/option/usa/minute/goog/20151224_openinterest_american.zip#20151224_goog_minute_openinterest_american_call_3000000_20160115.csv",
                 LeanData.ReadSymbolFromZipEntry(Symbol.Create("GOOG", SecurityType.Option, Market.USA),
                                                 Resolution.Minute,
                                                 "20151224_goog_minute_openinterest_american_call_3000000_20160115.csv"),
