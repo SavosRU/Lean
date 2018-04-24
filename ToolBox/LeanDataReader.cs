@@ -82,12 +82,14 @@ namespace QuantConnect.ToolBox
             var exchangeTimeZone = marketHoursDataBase.GetExchangeHours(symbol.ID.Market, symbol, symbol.SecurityType).TimeZone;
             var tickType = LeanData.GetCommonTickType(symbol.SecurityType);
 
+
+            // TODO: include all this conditionals into the LeanData.GetCommonTickType mehtod
             if (symbol.SecurityType == SecurityType.Crypto && !fileInfo.Name.Contains("quote"))
             {
                 tickType = TickType.Trade;
             }
 
-            if (symbol.SecurityType == SecurityType.Future && fileInfo.Name.Contains("quote"))
+            if ((symbol.SecurityType == SecurityType.Future|| symbol.SecurityType == SecurityType.Option) && fileInfo.Name.Contains("quote"))
             {
                 tickType = TickType.Quote;
             }
@@ -98,8 +100,6 @@ namespace QuantConnect.ToolBox
             }
 
             var dataType = LeanData.GetDataType(resolution, tickType);
-
-            
 
             var config = new SubscriptionDataConfig(dataType, symbol, resolution,
                                                     dataTimeZone, exchangeTimeZone, tickType: tickType,
