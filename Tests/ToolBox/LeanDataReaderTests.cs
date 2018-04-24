@@ -238,7 +238,7 @@ namespace QuantConnect.Tests.ToolBox
         }
 
 
-        public object[] OptionAndFuturesCases =
+        public static object[] OptionAndFuturesCases =
         {
             new object[]
             {

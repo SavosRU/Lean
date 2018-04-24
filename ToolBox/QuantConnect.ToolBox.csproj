@@ -251,13 +251,9 @@
     <Content Include="Visualizer\config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Visualizer\lean_data_parser.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Visualizer\QuantConnect.Visualizer.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Visualizer\tests\lean_data_parser_tests.py" />
     <Content Include="Visualizer\__init__.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
