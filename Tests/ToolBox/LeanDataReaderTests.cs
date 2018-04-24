@@ -264,6 +264,39 @@ namespace QuantConnect.Tests.ToolBox
                 259245064.8
             },
 
+            new object[]
+            {
+                "../../../Data\\future\\usa\\tick\\gc\\20131009_trade.zip#20131009_gc_tick_trade_201312.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold , SecurityType.Future, Market.USA), Resolution.Tick, "20131009_gc_tick_trade_201312.csv"),
+                64712,
+                84596673.8
+            },
+
+            new object[]
+            {
+                "../../../Data\\future\\usa\\tick\\gc\\20131009_trade.zip#20131009_gc_tick_trade_201312.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold , SecurityType.Future, Market.USA), Resolution.Tick, "20131009_gc_tick_trade_201312.csv"),
+                64712,
+                84596673.8
+            },
+
+            new object[]
+            {
+                "../../../Data\\future\\usa\\minute\\es\\20131010_openinterest.zip#20131010_es_minute_openinterest_201312.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Indices.SP500EMini, SecurityType.Future, Market.USA), Resolution.Tick, "20131010_es_minute_openinterest_201312.csv"),
+                3,
+                8119169
+            },
+
+            new object[]
+            {
+                "../../../Data\\future\\usa\\tick\\gc\\20131009_openinterest.zip#20131009_gc_tick_openinterest_201310.csv",
+                LeanData.ReadSymbolFromZipEntry(Symbol.Create(Futures.Metals.Gold, SecurityType.Future, Market.USA), Resolution.Tick, "20131009_gc_tick_openinterest_201310.csv"),
+                4,
+                1312
+            },
+
+
 
         };
         

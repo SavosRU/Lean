@@ -92,6 +92,11 @@ namespace QuantConnect.ToolBox
                 tickType = TickType.Quote;
             }
 
+            if (fileInfo.Name.Contains("openinterest"))
+            {
+                tickType = TickType.OpenInterest;
+            }
+
             var dataType = LeanData.GetDataType(resolution, tickType);
 
             

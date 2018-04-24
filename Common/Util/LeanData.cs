@@ -817,13 +817,10 @@ namespace QuantConnect.Util
                 resolution = (Resolution)Enum.Parse(typeof(Resolution), info[startIndex + 2], true);
                 var securityType = (SecurityType)Enum.Parse(typeof(SecurityType), info[startIndex], true);
 
-                if (securityType == SecurityType.Option || securityType == SecurityType.Future)
+                if (securityType == SecurityType.Option )
                 {
                     // TODO: watch out! check carefully why Andrew made this.
-                    if (fileName.Contains("openinterest") || securityType == SecurityType.Option)
-                    {
-                        throw new NotImplementedException("Options and open interest not supported, yet");
-                    }
+                    throw new NotImplementedException("Options and open interest not supported, yet");
                 }
 
                 // If resolution is Daily or Hour, we do not need to set the date and tick type
