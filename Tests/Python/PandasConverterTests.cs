@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using QuantConnect.Tests.ToolBox;
 using QuantConnect.ToolBox;
+using QuantConnect.Util;
 
 namespace QuantConnect.Tests.Engine.DataFeeds
 {
@@ -288,6 +289,55 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                     Assert.AreEqual(rawBars[i].AskPrice, value);
                 }
             }
+        }
+
+
+        private static Resolution[] ResolutionCases = { Resolution.Tick, Resolution.Minute, Resolution.Second };
+        private static Symbol[] SymbolCases = {Symbols.Fut_SPY_Feb19_2016, Symbols.Fut_SPY_Mar19_2016, Symbols.SPY_C_192_Feb19_2016, Symbols.SPY_P_192_Feb19_2016};
+
+        [Test]
+        public void HandlesOpenInterestTicks([ValueSource(nameof(ResolutionCases))]Resolution resolution, [ValueSource(nameof(SymbolCases))] Symbol symbol)
+        {
+            // Arrange
+            var converter = new PandasConverter();
+            var tickType = TickType.OpenInterest;
+            var dataType = LeanData.GetDataType(resolution, tickType);
+            var subcriptionDataConfig = new SubscriptionDataConfig(dataType, symbol, resolution,
+                                                                   TimeZones.Chicago, TimeZones.Chicago,
+                                                                   tickType: tickType, fillForward: false,
+                                                                   extendedHours: true, isInternalFeed: true);
+            var openinterest = new List<OpenInterest>();
+            for (int i = 0; i < 10; i++)
+            {
+                var line = $"{1000 * i},{11 * i}";
+                var openInterestTicks = new OpenInterest(subcriptionDataConfig, symbol, line, new DateTime(2017, 10, 10));
+                openinterest.Add(openInterestTicks);
+            }
+
+            // Act
+            dynamic dataFrame = converter.GetDataFrame(openinterest);
+
+            //Assert
+            using (Py.GIL())
+            {
+                Assert.IsFalse(dataFrame.empty.AsManagedObject(typeof(bool)));
+
+                var subDataFrame = dataFrame.loc[symbol.Value];
+                Assert.IsFalse(subDataFrame.empty.AsManagedObject(typeof(bool)));
+
+                Assert.IsTrue(subDataFrame.get("openinterest") != null);
+
+                var count = subDataFrame.shape[0].AsManagedObject(typeof(int));
+                Assert.AreEqual(count, 10);
+
+                for (var i = 0; i < count; i++)
+                {
+                    var index = subDataFrame.index[i];
+                    var value = subDataFrame.loc[index].openinterest.AsManagedObject(typeof(decimal));
+                    Assert.AreEqual(openinterest[i].Value, value);
+                }
+            }
+
         }
 
         [Test]

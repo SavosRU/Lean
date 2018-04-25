@@ -207,12 +207,6 @@ namespace QuantConnect.Tests.Common.Util
 
             var optionsTradePath = "Data/option/u sa/minute/aapl/20140606_trade_american.zip";
             Assert.IsFalse(LeanData.TryParsePath(optionsTradePath, out symbol, out date, out resolution));
-
-            var optionsOpenInterestPath = "Data/option/usa/minute/aapl/20140609_openinterest_american.zip";
-            Assert.IsFalse(LeanData.TryParsePath(optionsOpenInterestPath, out symbol, out date, out resolution));
-
-            var optionsQuotePath = "Data/option/usa/minute/aapl/20140609_quote_american.zip";
-            Assert.IsFalse(LeanData.TryParsePath(optionsQuotePath, out symbol, out date, out resolution));
         }
 
         [Test]

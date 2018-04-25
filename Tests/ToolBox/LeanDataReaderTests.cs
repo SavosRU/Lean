@@ -233,7 +233,6 @@ namespace QuantConnect.Tests.ToolBox
             // Assert
             Assert.True(symbol.Equals(data.First().Symbol));
             Assert.AreEqual(rowsInfile, data.Length);
-            //Assert.AreEqual(sumValue, data.Cast<Tick>().Where(t=> t.IsValid()).Sum(c => c.Value));
             Assert.AreEqual(sumValue, data.Sum(c => c.Value));
         }
 

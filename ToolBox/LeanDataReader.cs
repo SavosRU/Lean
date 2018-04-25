@@ -86,8 +86,8 @@ namespace QuantConnect.ToolBox
             {
                 tickType = (TickType)Enum.Parse(typeof(TickType), fileName.Split('_')[1], true);
             }
-            var dataType = LeanData.GetDataType(resolution, tickType);
 
+            var dataType = LeanData.GetDataType(resolution, tickType);
             var config = new SubscriptionDataConfig(dataType, symbol, resolution,
                                                     dataTimeZone, exchangeTimeZone, tickType: tickType,
                                                     fillForward: false, extendedHours: true, isInternalFeed: true);
