@@ -50,6 +50,15 @@ namespace QuantConnect.ToolBox
             _config = config;
         }
 
+        /// <summary>
+        /// Initialize a instance of LeanDataReader from a path to a zipped data file.
+        /// It also supports declaring the zip entry CSV file for options and futures.  
+        /// </summary>
+        /// <param name="filepath">Absolute or relative path to a zipped data file, optionally the zip entry file can be declared by using '#' as separator.</param>
+        /// <example>
+        /// var dataReader = LeanDataReader("../relative/path/to/file.zip")
+        /// var dataReader = LeanDataReader("absolute/path/to/file.zip#zipEntry.csv")
+        /// </example>
         public LeanDataReader(string filepath)
         {
             Symbol symbol;

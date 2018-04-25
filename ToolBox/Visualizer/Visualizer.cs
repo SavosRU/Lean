@@ -22,6 +22,7 @@ namespace QuantConnect.ToolBox.Visualizer
     {
         private readonly PandasConverter _converter = new PandasConverter();
 
+        /// <inheritdoc />
         public Visualizer(string filepath) : base(filepath) { }
 
         public PyObject ParseDataFrame() { return _converter.GetDataFrame(Parse()); }

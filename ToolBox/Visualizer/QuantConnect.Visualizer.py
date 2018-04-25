@@ -1,21 +1,27 @@
 """
 Usage:
-    QuantConnect.Visualizer.py DATAFILE PLOTFILE [--size height,width]
-    QuantConnect.Visualizer.py DATAFILE CSVFILE PLOTFILE [--size height,width]
+    QuantConnect.Visualizer.py DATAFILE [--output file_path] [--size height,width]
 
 Arguments:
-    DATAFILE   path or filename to the zipped data file to plot.
-    CSVFILE   specific CSV file to plot from an option or future file.
-    PLOTFILE  path or filename for the output plot.
+    DATAFILE   Absolute or relative path to a zipped data file to plot.
+               Optionally the zip entry file can be declared by using '#' as separator.
+    PLOTFILE   Path or filename for the output plot.
 
 Options:
-    -h --help                         show this.
-    -s, --size height,width           plot size in pixels [default: 800,400].
+    -h --help                 show this.
+    -o --output file_path     path or filename for the output plot. If not declared, it will save with an
+                              auto-generated name at the default folder defined in the config.json file.
+    -s, --size height,width   plot size in pixels [default: 800,400].
+
+Examples:
+    QuantConnect.Visualizer.py ../relative/path/to/file.zip
+    QuantConnect.Visualizer.py absolute/path/to/file.zip#zipEntry.csv
 """
 
 import json
 import os
 import sys
+import uuid
 from clr import AddReference
 from pathlib import Path
 
@@ -23,7 +29,6 @@ import matplotlib as mpl
 
 mpl.use('Agg')
 
-import matplotlib.pyplot as plt
 from docopt import docopt
 from matplotlib.dates import DateFormatter
 
@@ -52,22 +57,22 @@ def get_assemblies_folder():
     return assembly_folder_path
 
 
-def get_data(zip_file_path, is_tick_data, csv_filename=None):
+def get_data(data_file_argument):
     """
     It retrieves the data for a given zip file and an optional internal filename for option and futures.
-    :param zip_file_path: The path to the zip file whose data we want to plot.
-    :param is_tick_data: boolean indicating if the data has tick resolution.
-    :param csv_filename: (optional) internal file for the futures and option cases.
+    :param data_file_argument: Absolute or relative path to a zipped data file to plot, optionally the zip entry file
+                               can be declared by using '#' as separator.
     :return: a pandas.DataFrame with the data to plot.
     """
-    if csv_filename is not None:
-        zip_file_path += '#' + csv_filename
-
-    df = parse_data_as_dataframe(zip_file_path)
-    if is_tick_data:
+    df = parse_data_as_dataframe(data_file_argument)
+    if 'tick' in data_file_argument:
         cols_to_plot = [col for col in df.columns if 'price' in col]
     else:
         cols_to_plot = [col for col in df.columns if 'close' in col]
+
+    if 'openinterest' in data_file_argument:
+        cols_to_plot = ['openinterest']
+
     cols_to_plot = cols_to_plot[:2] if len(cols_to_plot) == 3 else cols_to_plot
     df = df.loc[:, cols_to_plot]
     return df
@@ -90,6 +95,21 @@ def parse_data_as_dataframe(zip_file_path):
     return df.loc[df.index.levels[0][0]]
 
 
+def generate_plot_filename():
+    """
+    Generates a random name for the output plot image file in the default folder defined in the config.json file.
+    :return: an absolute path to the output plot image file.
+    """
+    with open('config.json') as json_data:
+        default_output_folder = Path(json.load(json_data)['default_output_folder'])
+
+    if not default_output_folder.exists():
+        os.makedirs(str(default_output_folder.resolve().absolute()))
+    file_name = f'{str(uuid.uuid4())[:8]}.png'
+    file_path = default_output_folder.joinpath(file_name)
+    return str(file_path.resolve().absolute())
+
+
 def plot_and_save_image(data, plot_filename, is_low_resolution_data, size_px):
     """
     Plots the data and saves the plot as a png image.
@@ -105,34 +125,33 @@ def plot_and_save_image(data, plot_filename, is_low_resolution_data, size_px):
         plot.xaxis.set_major_formatter(DateFormatter("%H:%M"))
 
     fig.set_size_inches(size_px[0] / fig.dpi, size_px[1] / fig.dpi)
-    fig.savefig(f'{plot_filename}.png', transparent=True, dpi=fig.dpi)
+    fig.savefig(plot_filename, transparent=True, dpi=fig.dpi)
 
 
-def main(arguments):
+def get_data_plot_and_save_image(arguments):
     """
-    Main entry point.
-    :param arguments: docopt dictionary with the arguments.
-    :return: void
+    Get the data from a zipped file, make the plot, saves and returns the plot absolute path.
+    :param arguments: dictionary with the CLI arguments.
+    :return: the absolute file path to the output plot
     """
-    if arguments['DATAFILE'] is None or arguments['PLOTFILE'] is None:
-        raise NotImplementedError("Please set at minimum an zip data file path and a output image file path.")
-    if 'openinterest' in arguments['DATAFILE']:
-        raise NotImplementedError("Open interest not supported, yet.")
-    zip_file_info = Path(arguments['DATAFILE'])
-    zip_file_path = str(zip_file_info.absolute())
-    plot_filename = str(Path(arguments['PLOTFILE']).absolute())
+    data_file_argument = arguments['DATAFILE']
 
+    if data_file_argument is None:
+        raise NotImplementedError("Please set at minimum a zipped data file path.")
+
+    plot_filename = arguments['--output']
+    if plot_filename is None:
+        plot_filename = generate_plot_filename()
+
+    df = get_data(data_file_argument)
     size_px = [int(p) for p in arguments['--size'].split(',')]
+    is_low_resolution_data = 'hour' in data_file_argument or 'daily' in data_file_argument
 
-    full_path_list = list(zip_file_info.absolute().parts)
-    is_low_resolution_data = 'hour' in full_path_list or 'daily' in full_path_list
-    is_tick_data = 'tick' in full_path_list
-
-    df = get_data(zip_file_path, is_tick_data, arguments['CSVFILE'])
     plot_and_save_image(df, plot_filename, is_low_resolution_data, size_px)
+    return plot_filename
 
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)
-    main(arguments)
+    print(get_data_plot_and_save_image(arguments))
     sys.exit(0)
