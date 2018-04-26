@@ -1,4 +1,5 @@
 {
-  "assembly_folder" : "../.",
-  "default_output_folder" : "C:\\Users\\jjd\\Pictures\\Testing"
+  "assembly-folder": "../.",
+  "data-folder": "../../../Data/",
+  "default-output-folder": "./output_plots"
 }

@@ -16,6 +16,7 @@ Options:
 Examples:
     QuantConnect.Visualizer.py ../relative/path/to/file.zip
     QuantConnect.Visualizer.py absolute/path/to/file.zip#zipEntry.csv
+    QuantConnect.Visualizer.py absolute/path/to/file.zip -o path/to/image.png -s 1024,800
 """
 
 import json
@@ -41,8 +42,9 @@ def get_assemblies_folder():
     absolute path to that folder.
     :return: The absolute path to the folder where the needed assemblies are located.
     """
-    with open('config.json') as json_data:
-        assemblies_folder_info = Path(json.load(json_data)['assembly_folder'])
+    with open('config.json', 'r') as json_data:
+        config = json.load(json_data)
+    assemblies_folder_info = Path(config['assembly-folder'])
     assemblies = [file.name for file in assemblies_folder_info.glob('QuantConnect*.*')]
     if 'QuantConnect.ToolBox.exe' not in assemblies or 'QuantConnect.Common.dll' not in assemblies:
         raise NotImplementedError("Please set up correctly the QuantConnect assemblies folder.")
@@ -50,10 +52,11 @@ def get_assemblies_folder():
 
     config_file = assemblies_folder_info.joinpath('config.json')
     if not config_file.exists():
-        cfg_content = {'plugin-directory': assembly_folder_path}
+        data_folder_info = Path(config['data-folder'])
+        cfg_content = {'plugin-directory': assembly_folder_path,
+                       'data-folder': str(data_folder_info.resolve().absolute())}
         with open(str(config_file.resolve().absolute()), 'w') as cfg:
             json.dump(cfg_content, cfg)
-
     return assembly_folder_path
 
 
@@ -101,7 +104,7 @@ def generate_plot_filename():
     :return: an absolute path to the output plot image file.
     """
     with open('config.json') as json_data:
-        default_output_folder = Path(json.load(json_data)['default_output_folder'])
+        default_output_folder = Path(json.load(json_data)['default-output-folder'])
 
     if not default_output_folder.exists():
         os.makedirs(str(default_output_folder.resolve().absolute()))
